@@ -4,6 +4,8 @@ Easy to generate graph by genrate_graph.
 Possible to reproduce the same path by passing the 4th argument as random seed. (Note that 0 makes it really random using time(NULL).)  
 
 ```
+$ ./generate_graph
+./generate_graph: num_nodes num_edges(>=num_nodes-1) cost_power rand_seed(0 means time(NULL))
 $ time ./generate_graph 100 100 100 100 | ./dijkstra_cpp
 [Dijkstra search]  
 
