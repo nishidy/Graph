@@ -6,13 +6,35 @@ Possible to reproduce the same graph by passing the 4th argument as random seed.
 ```
 $ ./generate_graph
 ./generate_graph: num_nodes num_edges(>=num_nodes-1) cost_power rand_seed(0 means time(NULL))
-$ time ./generate_graph 100 100 100 100 | ./dijkstra_cpp
-[Dijkstra search]  
 
-Min cost is 5533 (0->38->39->40->41->42->43->44->45->46->47->48->49->50->51->52->53->54->55->56->57->58->59->60->61->62->63->64->65->66->67->68->69->70->71->72->73->74->75->76->77->78->79->80->81->82->83->84->85->86->87->88->89->90->91->92->93->94->95->96->97->98->99).
+$ ./generate_graph 1000 2000 100 0 | time -p ./dijkstra_cpp
+[Dijkstra search]
 
-real	0m0.008s
-user	0m0.005s
-sys	0m0.004s
+Min cost is 1287 (0->1->2->3->4->5->6->7->8->9->10->430->798->882->964->975->993->999).
+real         0.07
+user         0.06
+sys          0.00
+$ ./generate_graph 1000 2000 100 0 | time -p ./dijkstra_cpp
+[Dijkstra search]
+
+Min cost is 2637 (0->1->2->3->4->5->6->7->8->9->10->11->12->13->14->15->16->17->18->19->20->21->22->23->24->25->512->560->936->984->999).
+real         0.08
+user         0.08
+sys          0.00
+$ ./generate_graph 1000 2000 100 10 | time -p ./dijkstra_cpp
+[Dijkstra search]
+
+Min cost is 743 (0->1->2->3->4->5->555->782->967->999).
+real         0.06
+user         0.06
+sys          0.00
+$ ./generate_graph 1000 2000 100 10 | time -p ./dijkstra_cpp
+[Dijkstra search]
+
+Min cost is 743 (0->1->2->3->4->5->555->782->967->999).
+real         0.06
+user         0.05
+sys          0.00
+
 ```
 
