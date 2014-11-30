@@ -1,7 +1,7 @@
 #Purpose
 Try several algorithms about searching path in graph.  
-Easy to generate graph by genrate_graph.  
-Possible to reproduce the same path by passing the 4th argument as random seed. (Note that 0 makes it really random using time(NULL).)  
+Easy to generate graph by generate_graph.  
+Possible to reproduce the same graph by passing the 4th argument as random seed. (Note that 0 makes it really random using time(NULL).)  
 
 ```
 $ ./generate_graph
