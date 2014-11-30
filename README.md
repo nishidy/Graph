@@ -1,7 +1,7 @@
 #Purpose
 Try several algorithms about searching path in graph.  
-Easy to genrate graph by genrate_graph.  
-Possible to reproduce the same path by passing the 4th argument as random seed. (Note that 0 makes it really random by passing time(NULL).)  
+Easy to generate graph by genrate_graph.  
+Possible to reproduce the same path by passing the 4th argument as random seed. (Note that 0 makes it really random using time(NULL).)  
 
 ```
 $ time ./generate_graph 100 100 100 100 | ./dijkstra_cpp
