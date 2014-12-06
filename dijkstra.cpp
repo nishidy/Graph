@@ -156,10 +156,10 @@ int main(int argc, char* argv[]){
 				next->cost=cost;
 				next->from_id=node->id; // The shortest path backforward to start node
 				pq.push_back(next);
-				sort(pq.begin(),pq.end(),compClass()); // Descending order by cost
 				show_mid_result(next);
 			}
 		}
+		sort(pq.begin(),pq.end(),compClass()); // Descending order by cost
 
 		//show_nodes(nodes);
 		//show_queue(pq);

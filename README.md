@@ -122,8 +122,8 @@ $ ./generate_graph 10000 20000 10000 999 | time -p ./dijkstra_cpp
 [Shortest path search by dijkstra algorithm]
 
 Min cost is 133499 (0->1->2->3->4->5->6->7->8->9->10->1493->5909->7025->7026->7027->8759->9999).
-real         6.35
-user         6.34
+real         5.97
+user         5.96
 sys          0.00
 $ ./generate_graph 10000 20000 10000 999 | time -p java dijkstra
 [Shortest path search by dijkstra algorithm]
