@@ -49,7 +49,7 @@ real         0.00
 user         0.00
 sys          0.00
 $ ./generate_graph 10 15 100 1 | time -p java dijkstra 1
-[Dijkstra search]
+[Shortest path search by dijkstra algorithm]
 
 Min cost is 253 (0->3->4->9)
 real         0.09
@@ -100,7 +100,7 @@ real         0.01
 user         0.00
 sys          0.00
 $ ./generate_graph 100 1000 100 10 | time -p java dijkstra
-[Dijkstra search]
+[Shortest path search by dijkstra algorithm]
 
 Min cost is 154 (0->86->92->99)
 real         0.14
@@ -125,7 +125,7 @@ real         6.35
 user         6.34
 sys          0.00
 $ ./generate_graph 10000 20000 10000 999 | time -p java dijkstra
-[Dijkstra search]
+[Shortest path search by dijkstra algorithm]
 
 Min cost is 133499 (0->1->2->3->4->5->6->7->8->9->10->1493->5909->7025->7026->7027->8759->9999)
 real         1.18

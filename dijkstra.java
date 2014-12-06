@@ -53,7 +53,7 @@ class dijkstra {
 
 	public static void main(String[] argv) throws java.io.IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("[Dijkstra search]\n");
+		System.out.println("[Shortest path search by dijkstra algorithm]\n");
 
 		int T = Integer.parseInt(br.readLine());
 
