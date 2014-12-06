@@ -39,7 +39,7 @@ $ ./generate_graph 10 15 100 1 | time -p ./dijkstra_cpp 1
 0->1 (133)
 0->5 (110)
 0->3 (63)
-0->2->3 (139)
+0->3->2 (139)
 0->3->4 (173)
 0->5->6 (196)
 0->3->4->9 (253)
@@ -49,13 +49,6 @@ Min cost is 253 (0->3->4->9).
 real         0.00
 user         0.00
 sys          0.00
-$ ./generate_graph 10 15 100 1 | time -p java dijkstra 1
-[Shortest path search by dijkstra algorithm]
-
-Min cost is 253 (0->3->4->9)
-real         0.09
-user         0.08
-sys          0.02
 $ ./generate_graph 10 15 100 1 | time -p ./depth_first 1
 [Shortest path search by depth first algorithm]
 
@@ -93,45 +86,52 @@ Min cost is 253 (0->3->4->9).
 real         0.00
 user         0.00
 sys          0.00
+$ ./generate_graph 10 15 100 1 | time -p java dijkstra
+[Shortest path search by dijkstra algorithm]
+
+Min cost is 253 (0->3->4->9)
+real         0.10
+user         0.08
+sys          0.02
 $ ./generate_graph 100 1000 100 10 | time -p ./dijkstra_cpp
 [Shortest path search by dijkstra algorithm]
 
-Min cost is 154 (0->86->92->99).
+Min cost is 154 (0->92->86->99).
 real         0.01
 user         0.00
 sys          0.00
 $ ./generate_graph 100 1000 100 10 | time -p java dijkstra
 [Shortest path search by dijkstra algorithm]
 
-Min cost is 154 (0->86->92->99)
-real         0.14
-user         0.14
+Min cost is 154 (0->92->86->99)
+real         0.13
+user         0.13
 sys          0.02
 $ ./generate_graph 100 1000 100 10 | time -p ./depth_first
 [Shortest path search by depth first algorithm]
 
-Min cost is 154 (0->86->92->99).
+Min cost is 154 (0->92->86->99).
 real         0.19
-user         0.18
+user         0.19
 sys          0.00
-
 ```
 ### With large values
 ```
-$ ./generate_graph 10000 20000 10000 999 | time -p ./dijkstra_cpp 
+$ ./generate_graph 10000 20000 10000 999 | time -p ./dijkstra_cpp
 [Shortest path search by dijkstra algorithm]
 
-Min cost is 133499 (0->1->2->3->4->5->6->7->8->9->10->1493->5909->7025->7026->7027->8759->9999).
-real         5.97
-user         5.96
+Min cost is 133499 (0->1->2->3->4->5->6->7->8->9->10->7025->7026->7027->1493->8759->5909->9999).
+real         5.92
+user         5.92
 sys          0.00
 $ ./generate_graph 10000 20000 10000 999 | time -p java dijkstra
 [Shortest path search by dijkstra algorithm]
 
-Min cost is 133499 (0->1->2->3->4->5->6->7->8->9->10->1493->5909->7025->7026->7027->8759->9999)
-real         1.18
-user         0.80
+Min cost is 133499 (0->1->2->3->4->5->6->7->8->9->10->7025->7026->7027->1493->8759->5909->9999)
+real         1.20
+user         0.78
 sys          0.07
+
 ```
 
 ## Solving maximum flow problem

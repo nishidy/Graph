@@ -83,7 +83,7 @@ void show_mid_result(Node* node){
 		if(tmp_node->from_id!=-1){
 			tmp_node=get_node(tmp_node->from_id);
 		}else{
-			sort(min_path_nodes.begin(),min_path_nodes.end());
+			reverse(min_path_nodes.begin(),min_path_nodes.end());
 			itevi ite=min_path_nodes.begin();
 			while(ite!=min_path_nodes.end()){
 				if(ite!=min_path_nodes.begin()) cout<<"->";
@@ -177,7 +177,7 @@ int main(int argc, char* argv[]){
 		min_path_nodes.push_back(node->id);
 		node=get_node(node->from_id);
 		if(node==NULL){
-			sort(min_path_nodes.begin(),min_path_nodes.end());
+			reverse(min_path_nodes.begin(),min_path_nodes.end());
 			itevi ite=min_path_nodes.begin();
 			cout<<"(";
 			while(ite!=min_path_nodes.end()){

@@ -95,7 +95,7 @@ int search(int cost,int min_cost, Node* node, Node* goal_node, int depth){
 void search_path(Node* node,vector<int> min_path_nodes){
 	min_path_nodes.push_back(node->id);
 	if(node->min_from_node==NULL){
-		sort(min_path_nodes.begin(),min_path_nodes.end());
+		reverse(min_path_nodes.begin(),min_path_nodes.end());
 		itevi ite=min_path_nodes.begin();
 		printf("(");
 		while(ite!=min_path_nodes.end()){

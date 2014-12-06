@@ -130,7 +130,7 @@ class dijkstra {
 			node=nodes.get(node.from_id);
 			if(node==null){
 				System.out.print("(");
-				Collections.sort(min_path_nodes);
+				Collections.reverse(min_path_nodes);
 				for(int i=0;i<min_path_nodes.size();++i){
 					if(i>0) System.out.printf("->");
 					System.out.print(min_path_nodes.get(i));
