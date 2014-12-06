@@ -2,6 +2,7 @@
 Try several algorithms about searching path in graph.  
 Easy to generate graph by generate_graph.  
 Possible to reproduce the same graph by passing the 4th argument as random seed. (Note that 0 makes it really random using time(NULL).)  
+dijkstra.java is actually faster than dijkstra.cpp with large values because dijkstra.java uses HashMap to find a node while dijkstra.cpp still uses loop to find it.
 
 #Execution result
 
