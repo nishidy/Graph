@@ -110,7 +110,7 @@ void search_path(Node* node,vector<int> min_path_nodes){
 }
 
 int main(int argc, char* argv[]){
-	printf("[Depth first search]\n\n");
+	printf("[Shortest path search by depth first algorithm]\n\n");
 	if(argc==2&&1==atoi(argv[1])) DEBUG=1;
 
 	int num_edges;

@@ -97,7 +97,7 @@ void show_mid_result(Node* node){
 }
 
 int main(int argc, char* argv[]){
-	printf("[Dijkstra search]\n\n");
+	printf("[Shortest path search by dijkstra algorithm]\n\n");
 	if(argc==2&&1==atoi(argv[1])) DEBUG=1;
 
 	int n_edges;

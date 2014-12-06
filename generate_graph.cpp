@@ -20,6 +20,11 @@ int main(int argc, char* argv[]){
 	unsigned int rand_seed=(unsigned int)atoi(argv[4]);
 
 	if(num_edges<num_nodes-1) return 1;
+	int sum=0;
+	for(int i=num_nodes-1;i>0;i--){
+		sum+=i;
+	}
+	if(sum<num_edges) return 2;
 	if(cost_power==0) cost_power=1;
 
 	cout<<num_edges<<endl;
@@ -49,9 +54,10 @@ int main(int argc, char* argv[]){
 		i0=rand()%num_nodes;
 		id=rand()%num_nodes+1;
 		for(int i=i0;i<num_nodes;i+=id){
-			j0=rand()%(num_nodes-i)/2;
-			jd=rand()%(num_nodes-i)/2+1;
+			j0=rand()%(num_nodes-i);
+			jd=rand()%(num_nodes-i)+1;
 			for(int j=i+1+j0;j<num_nodes;j+=jd){
+				if(rand()%2==0) continue;
 				if(find(memo.begin(),memo.end(),pair<int,int>(i,j))==memo.end()){
 					a=rand()%(cost_power/3);
 					b=rand()%(cost_power/2);
