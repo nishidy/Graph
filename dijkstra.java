@@ -90,35 +90,32 @@ class dijkstra {
 		s=Integer.parseInt(str[0]);
 		g=Integer.parseInt(str[1]);
 
-
 		Queue<Node> pq = new PriorityQueue<Node>(1, new compClass());
 
 		Node node;
 		node=nodes.get(s);
-		node.done=true;
 		node.cost=0;
+		pq.add(node);
 
-		while(true){
+		Node next;
+		int cost;
 
-			Node next;
-			int cost;
+		while(!pq.isEmpty()){
+			node=pq.poll();
+			if(node.done) continue;
+			node.done=true;
+
+			if(finish()) break;
+
 			for(int i=0;i<node.edges_to.size();++i){
-				next=nodes.get(node.edges_to.get(i));
-				if(next.done) continue;
-
 				cost=node.cost+node.edges_cost.get(i);
+				next=nodes.get(node.edges_to.get(i));
 				if(cost<next.cost){
-					pq.remove(next);
-
-					next.cost=cost;
 					next.from_id=node.id;
+					next.cost=cost;
 					pq.add(next);
 				}
 			}
-
-			node=pq.poll();
-			node.done=true;
-			if(finish()) break;
 		}
 
 		System.out.printf("Min cost is %d ",nodes.get(g).cost);

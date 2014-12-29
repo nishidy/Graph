@@ -47,13 +47,15 @@ Node* get_node(int id){
 class compClass{
   public:
 	bool operator() (Node* a, Node* b){
-		// XXX: Sorts so that this returns true
+		// XXX: Sorts so that this returns !false!
 		return a->cost>b->cost;
 	}
 };
 
+typedef priority_queue<Node*, vector<Node*>, compClass> pNode;
+
 void show_nodes(vNode nodes){
-	for(int n=0;n<nodes.size();n++){
+	for(unsigned int n=0;n<nodes.size();n++){
 		cout<<nodes[n].id<<";";
 		cout<<nodes[n].cost<<";";
 		cout<<nodes[n].edges_to.size()<<";";
@@ -62,13 +64,13 @@ void show_nodes(vNode nodes){
 	}
 }
 
-void show_queue(vector<Node*> pq){
+void show_queue(pNode pq){
 	Node* node;
 	cout<<"pq: ";
 	while(!pq.empty()){
-		node=pq.back();
+		node=pq.top();
 		cout<<node->id<<":"<<node->cost<<",";
-		pq.pop_back();
+		pq.pop();
 	}
 	cout<<endl;
 }
@@ -130,45 +132,37 @@ int main(int argc, char* argv[]){
 	int s,g;
 	cin>>s>>g;
 
-	// C++ priority_queue does not have remove method
-	// use vector and sort instead
-	//priority_queue<Node*, vector<Node*>, compClass> pq;
-	vector<Node*> pq;
+	pNode pq;
 
 	node=get_node(s);
 	if(node==NULL) exit(100);
 	node->cost=0;
-	node->done=true;
-	show_mid_result(node);
+
+	pq.push(node);
 
 	Node* next;
 	int cost;
-	while(true){
 
-		for(int n=0;n<node->edges_to.size();++n){
+	while(!pq.empty()){
 
+		node=pq.top(); pq.pop();
+		if(node->done) continue;
+
+		node->done=true;
+		show_mid_result(node);
+
+		if(node->id==g) break;
+
+		for(unsigned int n=0;n<node->edges_to.size();++n){
 			next = get_node(node->edges_to[n]);
-			if(next==NULL) exit(100);
-			if(next->done) continue;
-
 			cost = node->cost+node->edges_cost[n];
-			if(next->cost > cost){
+			if(next->cost>cost){
 				next->cost=cost;
-				next->from_id=node->id; // The shortest path backforward to start node
-				pq.push_back(next);
-				show_mid_result(next);
+				// The shortest path backforward to start node
+				next->from_id=node->id;
+				pq.push(next);
 			}
 		}
-		sort(pq.begin(),pq.end(),compClass()); // Descending order by cost
-
-		//show_nodes(nodes);
-		//show_queue(pq);
-
-		// Get the last in descending order
-		// Erase() in ascending order takes much longer
-		node=pq.back(); pq.pop_back();
-		node->done=true;
-		if(node->id==g) break;
 	}
 
 	cout<<"Min cost is "<<node->cost<<" ";
