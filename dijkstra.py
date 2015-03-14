@@ -7,22 +7,37 @@ class Edge:
 		self.to=to
 		self.co=co
 
-	def __cmp__(self,ot):
-		return cmp(self.co,ot.co)
-
 class Node:
+	def __init__(self,n):
+		self.n=n # node id
+		self.co=1<<30
+		self.fn=-1 # from node (for debug)
+		self.fix=False
+
+class Node_in_queue:
 	def __init__(self,n,co):
 		self.n=n
 		self.co=co
 
+	def __cmp__(self,o):
+		return cmp(self.co,o.co)
+
 nedge=int(sys.stdin.readline())
 
-edges={}
+nodes={} # {node id:Node obj}
+edges={} # {from node id:Edge obj}
+
 for _ in range(nedge):
 	line=sys.stdin.readline().split()
 	fr=int(line[0])
 	to=int(line[1])
 	co=int(line[2])
+
+	if fr not in nodes:
+		nodes[fr]=Node(fr)
+
+	if to not in nodes:
+		nodes[to]=Node(to)
 
 	if fr not in edges:
 		edges[fr]=[]
@@ -32,7 +47,6 @@ for _ in range(nedge):
 		edges[to]=[]
 	edges[to].append(Edge(fr,to,co))
 
-
 line=sys.stdin.readline().split()
 st=int(line[0])
 go=int(line[1])
@@ -40,16 +54,39 @@ go=int(line[1])
 if st not in edges or go not in edges:
 	sys.exit(1)
 
-qu=Queue.PriorityQueue()
-qu.put(Node(st,0))
-fix=[]
-while not qu.empty():
-	node=qu.get()
-	if node.n in fix: continue
-	fix.append(node.n)
-	if node.n==go: break
-	for ed in edges[node.n]:
-		qu.put(Node(ed.to,ed.co+node.co))
+qu=Queue.PriorityQueue() # Node_in_queue obj
 
-print node.co
+nodes[st].co=0
+qu.put(Node_in_queue(st,0))
+
+print "[Shortest path search by dijkstra algorithm]\n"
+
+while not qu.empty():
+	frn=qu.get() # from node
+
+	def debug():
+		nl=[]
+		n=frn.n
+		while n>-1:
+			nl.append(nodes[n].n)
+			n=nodes[n].fn
+		if len(nl)>1:
+			nl.reverse()
+			return reduce(lambda x,y: str(x)+"->"+str(y),nl[1:],nl[0])
+		else:
+			return str(nl[0])
+	if len(sys.argv)>1 and int(sys.argv[1])==1:
+		print "%s (%d)"%(debug(),frn.co)
+
+	nodes[frn.n].fix=True
+	if frn.n==go: break
+
+	for ed in edges[frn.n]:
+		if nodes[ed.to].fix: continue
+		if frn.co+ed.co<nodes[ed.to].co:
+			nodes[ed.to].co=frn.co+ed.co
+			nodes[ed.to].fn=frn.n
+			qu.put(Node_in_queue(ed.to,frn.co+ed.co))
+
+print "Min cost is %d (%s)."%(frn.co,debug())
 
