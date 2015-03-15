@@ -172,6 +172,7 @@ sys          0.02
 ```
 
 ## Heap binary tree
+```
 $ python dijkstra_heap.py $(seq 20 30) $(seq 10 15)
 Show the heap tree.
 10
@@ -213,3 +214,4 @@ Show the heap tree.
         └---22
     └---13
         └---26
+```
