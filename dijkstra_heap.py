@@ -28,22 +28,69 @@ def heap_push(i):
 def heap_pop():
 	global heapn
 
-	t=heap[0]
-	n=0
-	while n*2+1<heapn:
-		if n*2+2<heapn:
-			if heap[n*2+1]<heap[n*2+2]:
-				heap[n]=heap[n*2+1]
-				n=n*2+1
+	rootv=heap[0] # save the top value to pop out
+
+	itor=heapn-1 # index to root from bottom
+	vofi=heap[itor] # value of the index
+
+	while itor>0:
+		itor=(itor-1)/2 # get parent's index
+
+		heap[itor],vofi=vofi,heap[itor]
+		# set the value of child to parent
+		# save the value of parent to vofi
+
+		itob=itor # index to bottom from itor
+
+		while itob<heapn:
+
+			# in case both children of itob exist
+			if itob*2+2<heapn:
+
+				# choose smaller child to exchange the value
+				if heap[itob*2+1]<heap[itob*2+2]:
+
+					# in case the value of child is smaller than parent
+					if heap[itob*2+1]<heap[itob]:
+
+						# exchange the value between parent and child
+						heap[itob],heap[itob*2+1]=heap[itob*2+1],heap[itob]
+						itob=itob*2+1 # Go down to this child
+
+					else:
+						break
+
+				else:
+
+					# in case the value of child is smaller than parent
+					if heap[itob*2+2]<heap[itob]:
+
+						# exchange the value between parent and child
+						heap[itob],heap[itob*2+2]=heap[itob*2+2],heap[itob]
+						itob=itob*2+2 # Go down to this child
+
+					else:
+						break
+
+			# in case of only a child of itob exist
+			elif itob*2+1<heapn:
+
+				# in case the value of child is smaller than parent
+				if heap[itob*2+1]<heap[itob]:
+
+					# exchange the value between parent and child
+					heap[itob],heap[itob*2+1]=heap[itob*2+1],heap[itob]
+					itob=itob*2+1 # Go down to this child
+
+				else:
+					break
+
+			# in case of no child of itob exist
 			else:
-				heap[n]=heap[n*2+2]
-				n=n*2+2
-		else:
-			heap[n]=heap[n*2+1]
-			n=n*2+1
+				break
 
 	heapn-=1
-	print "Popped %d."%t
+	print "Popped %d."%rootv
 
 def heap_show(n):
 	if n==0: print "Show the heap tree."
