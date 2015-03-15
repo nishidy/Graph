@@ -32,6 +32,7 @@ def heap_pop():
 
 	itor=heapn-1 # index to root from bottom
 	vofi=heap[itor] # value of the index
+	cexc=0 # the count of exchange
 
 	while itor>0:
 		itor=(itor-1)/2 # get parent's index
@@ -39,6 +40,7 @@ def heap_pop():
 		heap[itor],vofi=vofi,heap[itor]
 		# set the value of child to parent
 		# save the value of parent to vofi
+		cexc+=1
 
 		itob=itor # index to bottom from itor
 
@@ -55,6 +57,7 @@ def heap_pop():
 
 						# exchange the value between parent and child
 						heap[itob],heap[itob*2+1]=heap[itob*2+1],heap[itob]
+						cexc+=1
 						itob=itob*2+1 # Go down to this child
 
 					else:
@@ -67,6 +70,7 @@ def heap_pop():
 
 						# exchange the value between parent and child
 						heap[itob],heap[itob*2+2]=heap[itob*2+2],heap[itob]
+						cexc+=1
 						itob=itob*2+2 # Go down to this child
 
 					else:
@@ -80,6 +84,7 @@ def heap_pop():
 
 					# exchange the value between parent and child
 					heap[itob],heap[itob*2+1]=heap[itob*2+1],heap[itob]
+					cexc+=1
 					itob=itob*2+1 # Go down to this child
 
 				else:
@@ -90,7 +95,7 @@ def heap_pop():
 				break
 
 	heapn-=1
-	print "Popped %d."%rootv
+	print "Popped %d (%d times exchanged)."%(rootv,cexc)
 
 def heap_show(n):
 	if n==0: print "Show the heap tree."
