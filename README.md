@@ -170,3 +170,46 @@ real         1.02
 user         0.26
 sys          0.02
 ```
+
+## Heap binary tree
+$ python dijkstra_heap.py $(seq 20 30) $(seq 10 15)
+Show the heap tree.
+10
+└---14
+    └---15
+        └---21
+            └---27
+            └---23
+        └---28
+    └---24
+        └---29
+        └---30
+└---11
+    └---20
+        └---25
+        └---22
+    └---12
+        └---26
+        └---13
+Want to pop? (y/n): y
+Popped 10.
+Want to pop? (y/n): y
+Popped 11.
+Want to pop? (y/n): y
+Popped 12.
+Want to pop? (y/n): n
+Show the heap tree.
+13
+└---14
+    └---15
+        └---21
+        └---28
+    └---24
+        └---29
+        └---30
+└---13
+    └---20
+        └---25
+        └---22
+    └---13
+        └---26
