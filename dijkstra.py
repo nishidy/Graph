@@ -45,7 +45,7 @@ for _ in range(nedge):
 
 	if to not in edges:
 		edges[to]=[]
-	edges[to].append(Edge(fr,to,co))
+	edges[to].append(Edge(to,fr,co))
 
 line=sys.stdin.readline().split()
 st=int(line[0])

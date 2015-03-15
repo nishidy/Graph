@@ -32,6 +32,7 @@ $ ./generate_graph 10 15 100 1
 0 3 63
 4 9 80
 0 9
+
 $ ./generate_graph 10 15 100 1 | time -p ./dijkstra_cpp 1
 [Shortest path search by dijkstra algorithm]
 
@@ -85,6 +86,22 @@ Min cost is 253 (0->3->4->9).
 real         0.00
 user         0.00
 sys          0.00
+$ ./generate_graph 10 15 100 1 | time -p python dijkstra.py 1
+[Shortest path search by dijkstra algorithm]
+
+0 (0)
+0->3 (63)
+0->5 (110)
+0->1 (133)
+0->3->2 (139)
+0->3->4 (173)
+0->5->6 (196)
+0->5->6->7 (243)
+0->3->4->9 (253)
+Min cost is 253 (0->3->4->9).
+real         0.03
+user         0.01
+sys          0.00
 $ ./generate_graph 10 15 100 1 | time -p java dijkstra
 [Shortest path search by dijkstra algorithm]
 
@@ -92,12 +109,20 @@ Min cost is 253 (0->3->4->9)
 real         0.10
 user         0.08
 sys          0.02
+
 $ ./generate_graph 100 1000 100 10 | time -p ./dijkstra_cpp
 [Shortest path search by dijkstra algorithm]
 
 Min cost is 154 (0->92->86->99).
 real         0.01
 user         0.00
+sys          0.00
+$ ./generate_graph 100 1000 100 10 | time -p ./depth_first
+[Shortest path search by depth first algorithm]
+
+Min cost is 154 (0->92->86->99).
+real         0.19
+user         0.19
 sys          0.00
 $ ./generate_graph 100 1000 100 10 | time -p java dijkstra
 [Shortest path search by dijkstra algorithm]
@@ -106,13 +131,13 @@ Min cost is 154 (0->92->86->99)
 real         0.13
 user         0.13
 sys          0.02
-$ ./generate_graph 100 1000 100 10 | time -p ./depth_first
-[Shortest path search by depth first algorithm]
+$ ./generate_graph 100 1000 100 10 | time -p python dijkstra.py
+[Shortest path search by dijkstra algorithm]
 
 Min cost is 154 (0->92->86->99).
-real         0.19
-user         0.19
-sys          0.00
+real         0.03
+user         0.02
+sys          0.01
 ```
 ### With large values
 ```
@@ -132,6 +157,13 @@ real         1.20
 user         0.78
 sys          0.07
 
+$ ./generate_graph 10000 20000 10000 999 | time -p python dijkstra.py
+[Shortest path search by dijkstra algorithm]
+
+Min cost is 133499 (0->1->2->3->4->5->6->7->8->9->10->7025->7026->7027->1493->8759->5909->9999).
+real         1.31
+user         0.48
+sys          0.04
 ```
 
 ## Solving maximum flow problem
