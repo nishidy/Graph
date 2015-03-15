@@ -6,7 +6,7 @@ dijkstra.java is actually faster than dijkstra.cpp with large values because dij
 
 #Execution result
 
-## How to use genera_grah
+## How to use generate_graph
 ```
 $ ./generate_graph 
 ./generate_graph: num_nodes num_edges(>=num_nodes-1) cost_power rand_seed(0 means time(NULL))
