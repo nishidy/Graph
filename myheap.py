@@ -110,14 +110,17 @@ for i in map(lambda x:int(x),sys.argv[1:]):
 heap_show(0)
 
 while True:
-	print "Want to pop or show? (y/n/p): ",
+	print "Want to (pop/push/show/stop)? : ",
 	v=sys.stdin.readline().rstrip()
 	print "\r",
-	if v=="y":
+	if v=="pop":
 		heap_pop()
-	elif v=="n":
+	elif v=="push":
+		v=sys.stdin.readline().rstrip()
+		heap_push(int(v))
+	elif v=="stop":
 		break
-	elif v=="p":
+	elif v=="show":
 		heap_show(0)
 	else:
 		pass
