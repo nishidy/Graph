@@ -9,20 +9,20 @@ heapn=0
 def heap_push(i):
 	global heapn
 
-	if len(heap)==0:
+	c=heapn
+	p=(heapn-1)/2
+
+	if len(heap)<=heapn:
 		heap.append(i)
 	else:
-		c=heapn
-		p=(heapn-1)/2
+		heap[heapn]=i
 
-		heap.append(i)
+	while p>=0:
+		if heap[p]>=i:
+			heap[p],heap[c]=i,heap[p]
+		c=p
+		p=(p-1)/2
 
-		while True:
-			if heap[p]>=i:
-				heap[p],heap[c]=i,heap[p]
-			if p==0: break
-			c=p
-			p=(p-1)/2
 	heapn+=1
 
 def heap_pop():
