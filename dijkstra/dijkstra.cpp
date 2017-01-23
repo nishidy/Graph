@@ -1,191 +1,235 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <utility>
+#include <unordered_map>
 #include <queue>
-#include <algorithm>
+#include <sstream>
 
 using namespace std;
-typedef vector<int> vint;
-typedef vector<int>::iterator itevi;
 
-#define MAX 1<<20
+typedef int To;
+typedef int Cost;
+typedef unordered_map<To,Cost> Edges;
 
-int DEBUG=0;
+class Node {
+    int id;
+    Edges edges;
 
-class Node{
-  public:
-	int id;
-	vint edges_to;
-	vint edges_cost;
+    public:
+        Node(int from):id(from){};
 
-	bool done;
-	int cost;
-	int from_id;
+        void add_edge(int to_node, int cost){
+            edges[to_node] = cost;
+        }
 
-	Node(){};
-	Node(int id){
-		this->done=false;
-		this->id=id;
-		this->from_id=-1;
-		this->cost=MAX;
-	};
+        int get_id(){
+            return id;
+        }
+
+        Edges* get_edges(){
+            return &edges;
+        }
 };
 
-typedef vector<Node> vNode;
-vNode nodes;
+typedef int Id;
+typedef unordered_map<Id,Node*> Nodes;
 
-Node* get_node(int id){
-	for(vNode::iterator it=nodes.begin();\
-		it!=nodes.end();++it){
-		if(it->id==id){
-			return &(*it);
-		}
-	}
+class Graph {
+    protected:
+        Nodes nodes;
 
-	return NULL;
-}
+    public:
+        Graph(){};
+        void add_node(int from){
+            if(nodes.find(from)==nodes.end())
+                nodes[from] = new Node(from);
+        }
 
-class compClass{
-  public:
-	bool operator() (Node* a, Node* b){
-		// XXX: Sorts so that this returns !false!
-		return a->cost>b->cost;
-	}
+        void add_edge(int from, int to, int cost){
+            Node* node = nodes[from];
+            node->add_edge(to,cost);
+        }
+
+        virtual void solve(int,int) = 0;
+        virtual void show_path() = 0;
 };
 
-typedef priority_queue<Node*, vector<Node*>, compClass> pNode;
 
-void show_nodes(vNode nodes){
-	for(unsigned int n=0;n<nodes.size();n++){
-		cout<<nodes[n].id<<";";
-		cout<<nodes[n].cost<<";";
-		cout<<nodes[n].edges_to.size()<<";";
-		cout<<nodes[n].edges_cost.size()<<";";
-		cout<<endl;
-	}
+typedef struct ManageNode {
+    Node* node;
+    int cost;
+    bool done;
+    int from;
+    ManageNode(Node *node, int cost): node(node), cost(cost), done(false), from(-1) {};
+} ManageNode;
+
+class compClass {
+    public:
+        bool operator() (ManageNode* a, ManageNode* b){
+            return a->cost > b->cost;
+        }
+};
+
+typedef unordered_map<Id,ManageNode*> ManageNodes;
+typedef priority_queue<ManageNode*, vector<ManageNode*>, compClass> QueueNodes;
+
+string reduce(vector<int>& path){
+    stringstream ss;
+    for(int i=0;i<path.size()-1;i++){
+        ss << path[i] << " -> ";
+    }
+    ss << path[path.size()-1];
+    return ss.str();
 }
 
-void show_queue(pNode pq){
-	Node* node;
-	cout<<"pq: ";
-	while(!pq.empty()){
-		node=pq.top();
-		cout<<node->id<<":"<<node->cost<<",";
-		pq.pop();
-	}
-	cout<<endl;
+class Dijkstra : public Graph {
+    ManageNodes man_nodes;
+    QueueNodes pq_nodes;
+    int start, goal;
+
+    void init_man_nodes(){
+        for(auto node_info: nodes){
+            int node_id = node_info.first;
+            Node* node = node_info.second;
+            man_nodes[node_id] = new ManageNode(node,1<<30);
+        }
+    }
+
+    void update_man_node(int node_id, int cost, int from){
+        man_nodes[node_id]->cost = cost;
+        man_nodes[node_id]->from = from;
+    }
+
+    void enque_man_node(int node_id){
+        ManageNode* man_node = man_nodes[node_id];
+        pq_nodes.push( man_node );
+    }
+
+    int get_man_node_cost(int node_id){
+        return man_nodes[node_id]->cost;
+    }
+
+    Node* take_min_cost_node(){
+        return pq_nodes.top()->node;
+    }
+
+    int take_min_cost(){
+        return pq_nodes.top()->cost;
+    }
+
+    void remove_min_cost_node(){
+        pq_nodes.pop();
+    }
+
+    bool judge_if_done(int node_id){
+        return man_nodes[node_id]->done;
+    }
+
+    void save_done(int node_id){
+        man_nodes[node_id]->done = true;
+    }
+
+    public:
+        Dijkstra() {};
+
+        void solve(int start, int goal){
+            this->start = start;
+            this->goal = goal;
+
+            cout << start << " ---> " << goal << endl;
+
+            init_man_nodes();
+            update_man_node(start, 0, -1);
+            enque_man_node(start);
+
+            int to_goal_cost = 0;
+
+            Node *node;
+            int cost, node_id;
+            while(!pq_nodes.empty()){
+                node = take_min_cost_node();
+                cost = take_min_cost();
+                node_id = node->get_id();
+
+                remove_min_cost_node();
+
+                if(judge_if_done(node_id)){
+                    continue;
+                }else{
+                    save_done(node_id);
+                }
+
+                if(node_id==goal){
+                    to_goal_cost = cost;
+                    break;
+                }
+
+                int to_node_id, to_node_cost, new_cost;
+                for( auto edge: *(node->get_edges()) ){
+                    to_node_id = edge.first;
+                    to_node_cost = edge.second;
+
+                    new_cost = cost+to_node_cost;
+                    if(new_cost < get_man_node_cost(to_node_id)){
+                        update_man_node(to_node_id, new_cost, node_id);
+                        enque_man_node(to_node_id);
+                    }
+                }
+            }
+            cout << "cost : " << to_goal_cost << endl;
+        }
+
+        void show_path(){
+            cout << "path : ";
+            vector<int> path;
+            int node_id = goal;
+            for(;;){
+                path.push_back(node_id);
+                if(node_id==start)
+                    break;
+                node_id = man_nodes[node_id]->from;
+            }
+            reverse(path.begin(),path.end());
+            cout << reduce(path) << endl;
+        }
+};
+
+int main(int argc, char* argv[]) {
+
+    int num_nodes, num_edges;
+    int start_node, goal_node;
+
+    Graph* graph = new Dijkstra();
+
+    if(argc==2) {
+        ifstream ifs(argv[1]);
+        ifs >> num_nodes >> num_edges;
+        ifs >> start_node >> goal_node;
+    
+        int from_node, to_node, edge_cost;
+        while( ifs >> from_node >> to_node >> edge_cost ){
+            graph->add_node(from_node);
+            graph->add_node(to_node);
+            graph->add_edge(from_node,to_node,edge_cost);
+        }
+
+    }else{
+        cin >> num_nodes >> num_edges;
+        cin >> start_node >> goal_node;
+
+        int from_node, to_node, edge_cost;
+        for(int i=0;i<num_edges;i++){
+            cin >> from_node >> to_node >> edge_cost;
+            graph->add_node(from_node);
+            graph->add_node(to_node);
+            graph->add_edge(from_node,to_node,edge_cost);
+        }
+    }
+
+    graph->solve(start_node,goal_node);
+    graph->show_path();
+
+    return 0;
 }
-
-void show_mid_result(Node* node){
-	if(DEBUG==0) return;
-
-	vector<int> min_path_nodes;
-	Node* tmp_node=node;
-	while(true){
-		min_path_nodes.push_back(tmp_node->id);
-		if(tmp_node->from_id!=-1){
-			tmp_node=get_node(tmp_node->from_id);
-		}else{
-			reverse(min_path_nodes.begin(),min_path_nodes.end());
-			itevi ite=min_path_nodes.begin();
-			while(ite!=min_path_nodes.end()){
-				if(ite!=min_path_nodes.begin()) cout<<"->";
-				cout<<*ite;
-				ite++;
-			}
-			break;
-		}
-	}
-	cout<<" "<<"("<<node->cost<<")"<<endl;
-}
-
-int main(int argc, char* argv[]){
-	printf("[Shortest path search by dijkstra algorithm]\n\n");
-	if(argc==2&&1==atoi(argv[1])) DEBUG=1;
-
-	int n_edges;
-	cin>>n_edges;
-
-	int f,t,c;
-	Node *node,*tnode;
-	for(int n=0;n<n_edges;++n){
-		cin>>f>>t>>c;
-
-		node=get_node(f);
-		if(node==NULL){
-			Node newnode(f);
-			nodes.push_back(newnode);
-			node=&nodes.back();
-		}
-		node->edges_to.push_back(t);
-		node->edges_cost.push_back(c);
-
-		tnode=get_node(t);
-		if(tnode==NULL){
-			Node newnode(t);
-			nodes.push_back(newnode);
-			tnode=&nodes.back();
-		}
-		tnode->edges_to.push_back(f);
-		tnode->edges_cost.push_back(c);
-	}
-
-	int s,g;
-	cin>>s>>g;
-
-	pNode pq;
-
-	node=get_node(s);
-	if(node==NULL) exit(100);
-	node->cost=0;
-
-	pq.push(node);
-
-	Node* next;
-	int cost;
-
-	while(!pq.empty()){
-
-		node=pq.top(); pq.pop();
-		if(node->done) continue;
-
-		node->done=true;
-		show_mid_result(node);
-
-		if(node->id==g) break;
-
-		for(unsigned int n=0;n<node->edges_to.size();++n){
-			next = get_node(node->edges_to[n]);
-			cost = node->cost+node->edges_cost[n];
-			if(next->cost>cost){
-				next->cost=cost;
-				// The shortest path backforward to start node
-				next->from_id=node->id;
-				pq.push(next);
-			}
-		}
-	}
-
-	cout<<"Min cost is "<<node->cost<<" ";
-	vector<int> min_path_nodes;
-	while(true){
-		min_path_nodes.push_back(node->id);
-		node=get_node(node->from_id);
-		if(node==NULL){
-			reverse(min_path_nodes.begin(),min_path_nodes.end());
-			itevi ite=min_path_nodes.begin();
-			cout<<"(";
-			while(ite!=min_path_nodes.end()){
-				if(ite!=min_path_nodes.begin()) cout<<"->";
-				cout<<*ite;
-				ite++;
-			}
-			cout<<")."<<endl;
-			break;
-		}
-	}
-
-	return 0;
-
-}
-
 

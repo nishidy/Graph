@@ -1,95 +1,115 @@
 import sys
-import Queue
-
-class Edge:
-	def __init__(self,fr,to,co):
-		self.fr=fr
-		self.to=to
-		self.co=co
+from heapq import *
+from functools import reduce
 
 class Node:
-	def __init__(self,n):
-		self.n=n # node id
-		self.co=1<<30
-		self.fn=-1 # from node (for debug)
-		self.fix=False
 
-class Node_in_q:
-	def __init__(self,n,co):
-		self.n=n
-		self.co=co
+     def __init__(self,fromnodeid):
+        self.no = fromnodeid
+        self.edges = {}
 
-	def __cmp__(self,o):
-		return cmp(self.co,o.co)
+class Graph:
 
-nedge=int(sys.stdin.readline())
+    def __init__(self):
+        self.nodes = {}
 
-nodes={} # {node id:Node obj}
-edges={} # {from node id:Edge obj}
+    def addnode(self,nodeid):
+        if nodeid not in self.nodes:
+            self.nodes[nodeid] = Node(nodeid)
 
-for _ in range(nedge):
-	line=sys.stdin.readline().split()
-	fr=int(line[0])
-	to=int(line[1])
-	co=int(line[2])
+    def addedge(self,fromnodeid,tonodeid,cost):
+        self.nodes[fromnodeid].edges[tonodeid] = cost
 
-	if fr not in nodes:
-		nodes[fr]=Node(fr)
+class ManageNode:
 
-	if to not in nodes:
-		nodes[to]=Node(to)
+    def __init__(self,node):
+        self.node = node
+        self.done = False
+        self.cost = 1 << 30
+        self.fromnodeid = -1
 
-	if fr not in edges:
-		edges[fr]=[]
-	edges[fr].append(Edge(fr,to,co))
+class Dijkstra(Graph):
 
-	if to not in edges:
-		edges[to]=[]
-	edges[to].append(Edge(to,fr,co))
+    def __init__(self):
+        super().__init__()
+        self.start = 0
+        self.goal= 0
+        self.heap = []
+        self.mannodes = {}
 
-line=sys.stdin.readline().split()
-st=int(line[0])
-go=int(line[1])
+    def initmannode(self):
+        for nodeid,node in self.nodes.items():
+            self.mannodes[nodeid] = ManageNode(node)
 
-if st not in edges or go not in edges:
-	sys.exit(1)
+    def solve(self,start,goal):
+        self.start = start
+        self.goal = goal
 
-qu=Queue.PriorityQueue() # Node_in_q obj
+        print("{0} ---> {1}".format(start,goal))
 
-nodes[st].co=0
-qu.put(Node_in_q(st,0))
+        self.initmannode()
+        heappush( self.heap, (0,self.mannodes[self.start]) )
 
-df=False
-if len(sys.argv)>1 and int(sys.argv[1])==1: df=True
+        togoalcost = 0
+        while len(self.heap) > 0:
+            (cost,mannode) = heappop(self.heap)
+            nodeid = mannode.node.no
+            if mannode.done:
+                continue
+            if nodeid == self.goal:
+                togoalcost = cost
+                break
+            for tonode,edgecost in mannode.node.edges.items():
+                newcost = cost + edgecost
+                tonodecost = self.mannodes[tonode].cost
+                if newcost < tonodecost:
+                    heappush(self.heap,(newcost,self.mannodes[tonode]))
+                    self.mannodes[tonode].cost = newcost
+                    self.mannodes[tonode].fromnodeid = nodeid
 
-print "[Shortest path search by dijkstra algorithm]\n"
+        print("cost : ", togoalcost)
 
-while not qu.empty():
-	frn=qu.get() # from node
+    def show_path(self):
+        path = []
+        nodeid = self.goal
+        while True:
+            path.append(nodeid)
+            if nodeid == self.start:
+                break
+            mannode = self.mannodes[nodeid]
+            nodeid = mannode.fromnodeid
 
-	def debug():
-		nl=[]
-		n=frn.n
-		while n>-1:
-			nl.append(nodes[n].n)
-			n=nodes[n].fn
-		if len(nl)>1:
-			nl.reverse()
-			return reduce(lambda x,y: str(x)+"->"+str(y),nl[1:],nl[0])
-		else:
-			return str(nl[0])
+        path.reverse()
+        print("path : ", reduce(lambda a,b: "{0} -> {1}".format(a,b), path))
 
-	if df: print "%s (%d)"%(debug(),frn.co)
+def getlineno(fname):
+    lineno = 1
+    for line in open(sys.argv[1]):
+        yield lineno, line
+        lineno += 1
 
-	nodes[frn.n].fix=True
-	if frn.n==go: break
+graph = Dijkstra()
+if len(sys.argv) == 2:
+    for lineno, line in getlineno(sys.argv[1]):
+        if lineno == 1:
+            numnode,numedge = map(lambda x: int(x),line.split())
+        if lineno == 2:
+            start,goal = map(lambda x: int(x),line.split())
+            graph = Dijkstra(start,goal)
+        if lineno > 2:
+            fromnodeid,tonodeid,edgecost = map(lambda x: int(x),line.split())
+            graph.addnode(fromnodeid)
+            graph.addnode(tonodeid)
+            graph.addedge(fromnodeid,tonodeid,edgecost)
+else:
+    numnode,numedge= map(lambda x: int(x), input().split())
+    start,goal= map(lambda x: int(x), input().split())
+    for n in range(numedge):
+        fromnodeid,tonodeid,edgecost = map(lambda x: int(x),input().split())
+        graph.addnode(fromnodeid)
+        graph.addnode(tonodeid)
+        graph.addedge(fromnodeid,tonodeid,edgecost)
 
-	for ed in edges[frn.n]:
-		if nodes[ed.to].fix: continue
-		if frn.co+ed.co<nodes[ed.to].co:
-			nodes[ed.to].co=frn.co+ed.co
-			nodes[ed.to].fn=frn.n
-			qu.put(Node_in_q(ed.to,frn.co+ed.co))
-
-print "Min cost is %d (%s)."%(frn.co,debug())
+graph.solve(start,goal)
+graph.show_path()
 
