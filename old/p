@@ -1,0 +1,92 @@
+[Shortest path search by dijkstra algorithm]
+
+Pushing 0. heapn is 1
+show n=0, heapn=1
+Show the heap tree.
+0
+show n=1, heapn=1
+show n=2, heapn=1
+Popping 0.
+0 (0)
+Pushing 1. heapn is 1
+show n=0, heapn=1
+Show the heap tree.
+1
+show n=1, heapn=1
+show n=2, heapn=1
+Pushing 5. heapn is 2
+show n=0, heapn=2
+Show the heap tree.
+5
+show n=1, heapn=2
+└---1
+show n=3, heapn=2
+show n=4, heapn=2
+show n=2, heapn=2
+Pushing 3. heapn is 3
+show n=0, heapn=3
+Show the heap tree.
+3
+show n=1, heapn=3
+└---1
+show n=3, heapn=3
+show n=4, heapn=3
+show n=2, heapn=3
+└---5
+show n=5, heapn=3
+show n=6, heapn=3
+Popping 3.
+0->3 (63)
+Pushing 2. heapn is 3
+show n=0, heapn=3
+Show the heap tree.
+5
+show n=1, heapn=3
+└---1
+show n=3, heapn=3
+show n=4, heapn=3
+show n=2, heapn=3
+└---5
+show n=5, heapn=3
+show n=6, heapn=3
+Pushing 4. heapn is 4
+show n=0, heapn=4
+Show the heap tree.
+5
+show n=1, heapn=4
+└---1
+show n=3, heapn=4
+    └---2
+show n=7, heapn=4
+show n=8, heapn=4
+show n=4, heapn=4
+show n=2, heapn=4
+└---5
+show n=5, heapn=4
+show n=6, heapn=4
+Popping 5.
+0->5 (110)
+Pushing 6. heapn is 4
+show n=0, heapn=4
+Show the heap tree.
+5
+show n=1, heapn=4
+└---2
+show n=3, heapn=4
+    └---2
+show n=7, heapn=4
+show n=8, heapn=4
+show n=4, heapn=4
+show n=2, heapn=4
+└---1
+show n=5, heapn=4
+show n=6, heapn=4
+Popping 5.
+0->5 (110)
+Popping 1.
+0->1 (133)
+Popping 2.
+0->3->2 (139)
+Popping 2.
+0->3->2 (139)
+Min cost is 139 (0->3->2).
