@@ -3,13 +3,11 @@ from heapq import *
 from functools import reduce
 
 class Node:
-
      def __init__(self,fromnodeid):
         self.no = fromnodeid
         self.edges = {}
 
 class Graph:
-
     def __init__(self):
         self.nodes = {}
 
@@ -21,7 +19,6 @@ class Graph:
         self.nodes[fromnodeid].edges[tonodeid] = cost
 
 class ManageNode:
-
     def __init__(self,node):
         self.node = node
         self.done = False
@@ -29,7 +26,6 @@ class ManageNode:
         self.fromnodeid = -1
 
 class Dijkstra(Graph):
-
     def __init__(self):
         super().__init__()
         self.start = 0
@@ -81,6 +77,7 @@ class Dijkstra(Graph):
 
         path.reverse()
         print("path : ", reduce(lambda a,b: "{0} -> {1}".format(a,b), path))
+
 
 def getlineno(fname):
     lineno = 1
