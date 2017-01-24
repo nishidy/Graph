@@ -25,6 +25,12 @@ class ManageNode:
         self.cost = 1 << 30
         self.fromnodeid = -1
 
+    def __lt__(self,target):
+        return self.cost < target.cost
+
+    def __eq__(self,target):
+        return self.cost == target.cost
+
 class Dijkstra(Graph):
     def __init__(self):
         super().__init__()
@@ -37,6 +43,10 @@ class Dijkstra(Graph):
         for nodeid,node in self.nodes.items():
             self.mannodes[nodeid] = ManageNode(node)
 
+    def updatemannode(self,tonodeid,cost,fromnodeid):
+        self.mannodes[tonodeid].cost = cost
+        self.mannodes[tonodeid].fromnodeid = fromnodeid
+
     def solve(self,start,goal):
         self.start = start
         self.goal = goal
@@ -44,26 +54,32 @@ class Dijkstra(Graph):
         print("{0} ---> {1}".format(start,goal))
 
         self.initmannode()
-        heappush( self.heap, (0,self.mannodes[self.start]) )
+        self.updatemannode(0,0,-1)
+        heappush(self.heap, self.mannodes[self.start])
 
         togoalcost = 0
         while len(self.heap) > 0:
-            (cost,mannode) = heappop(self.heap)
+            try:
+                mannode = heappop(self.heap)
+            except Exception as e:
+                print(len(self.heap))
+                print(self.heap[:10])
+                raise e
+            cost = mannode.cost
             nodeid = mannode.node.no
             if mannode.done:
                 continue
             if nodeid == self.goal:
                 togoalcost = cost
                 break
-            for tonode,edgecost in mannode.node.edges.items():
+            for tonodeid,edgecost in mannode.node.edges.items():
                 newcost = cost + edgecost
-                tonodecost = self.mannodes[tonode].cost
+                tonodecost = self.mannodes[tonodeid].cost
                 if newcost < tonodecost:
-                    heappush(self.heap,(newcost,self.mannodes[tonode]))
-                    self.mannodes[tonode].cost = newcost
-                    self.mannodes[tonode].fromnodeid = nodeid
+                    self.updatemannode(tonodeid,newcost,nodeid)
+                    heappush(self.heap,self.mannodes[tonodeid])
 
-        print("cost : ", togoalcost)
+        print("cost :", togoalcost)
 
     def show_path(self):
         path = []
@@ -76,7 +92,7 @@ class Dijkstra(Graph):
             nodeid = mannode.fromnodeid
 
         path.reverse()
-        print("path : ", reduce(lambda a,b: "{0} -> {1}".format(a,b), path))
+        print("path :", reduce(lambda a,b: "{0} -> {1}".format(a,b), path))
 
 
 def getlineno(fname):
