@@ -78,7 +78,7 @@ class Heap
                 end
             end
 
-            @heap[smaller_idx],@heap[idx] = @heap[idx],@heap[left_idx]
+            @heap[smaller_idx],@heap[idx] = @heap[idx],@heap[smaller_idx]
             idx = smaller_idx
         end
         #debug(key)
