@@ -54,7 +54,7 @@ class Dijkstra(Graph):
         print("{0} ---> {1}".format(start,goal))
 
         self.initmannode()
-        self.updatemannode(0,0,-1)
+        self.updatemannode(self.start,0,-1)
         heappush(self.heap, self.mannodes[self.start])
 
         togoalcost = 0
@@ -62,8 +62,7 @@ class Dijkstra(Graph):
             try:
                 mannode = heappop(self.heap)
             except Exception as e:
-                print(len(self.heap))
-                print(self.heap[:10])
+                print(len(self.heap,self.heap[:10]))
                 raise e
             cost = mannode.cost
             nodeid = mannode.node.no
