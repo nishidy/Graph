@@ -42,40 +42,46 @@ class Heap
     end
 
     def push(node,key)
-        @heap[@num_heap] = node
-        @num_heap+=1
-
         idx = @num_heap
-        while 0<=idx do
+        @heap[idx] = node
+
+        while 0<idx do
             up_idx = (idx-1)/2
-            if node[key] < @heap[up_idx][key]
-                @heap[up_idx], node = node, @heap[up_idx]
+            if @heap[idx][key] < @heap[up_idx][key]
+                @heap[up_idx], @heap[idx] = @heap[idx], @heap[up_idx]
             end
             idx = up_idx
         end
+        @num_heap+=1
     end
 
     def pop(key)
         top = @heap[0].dup
+        @heap[0] = @heap[@num_heap-1]
         @num_heap-=1
+        #debug(key)
 
         idx = 0
         while idx<@num_heap do
             left_idx = idx*2+1
             right_idx = left_idx+1
-            if left_idx == @num_heap
-                @heap[idx] = @heap[left_idx]
-                idx = left_idx
-            elsif right_idx == @num_heap
+
+            if @num_heap-1 < left_idx
+                break
+            elsif @num_heap-1 == left_idx
+                smaller_idx = left_idx
+            elsif left_idx < @num_heap-1
                 if @heap[left_idx][key] < @heap[right_idx][key]
-                    @heap[idx] = @heap[left_idx]
-                    idx = left_idx
+                    smaller_idx = left_idx
                 else
-                    @heap[idx] = @heap[right_idx]
-                    idx = right_idx
+                    smaller_idx = right_idx
                 end
             end
+
+            @heap[smaller_idx],@heap[idx] = @heap[idx],@heap[left_idx]
+            idx = smaller_idx
         end
+        #debug(key)
         top
     end
 
@@ -87,6 +93,9 @@ class Heap
         @num_heap == 0
     end
 
+    def debug(key)
+        puts @heap.each.map{|a|a[key]}.reduce{|a,b|"#{a} #{b}"}
+    end
 end
 
 class Dijkstra < Graph
@@ -138,7 +147,9 @@ class Dijkstra < Graph
         enque_man_node(@start)
 
         to_goal_cost = 0
+        c=0
         while !@pq_nodes.empty? do
+            c+=1
             node = @pq_nodes.top[:node]
             cost = @pq_nodes.top[:cost]
             node_id = node.get_id()
@@ -194,7 +205,6 @@ if __FILE__ == $0
                 case file.lineno
                 when 1 then
                     num_nodes,num_edges = line.split.map{|i|i.to_i}
-                    puts "#{num_nodes} #{num_edges}"
                 when 2 then
                     start,goal = line.split.map{|i|i.to_i}
                 else
