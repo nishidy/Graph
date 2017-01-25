@@ -62,7 +62,7 @@ class Dijkstra(Graph):
             try:
                 mannode = heappop(self.heap)
             except Exception as e:
-                print(len(self.heap,self.heap[:10]))
+                print(len(self.heap),self.heap[:10])
                 raise e
             cost = mannode.cost
             nodeid = mannode.node.no
