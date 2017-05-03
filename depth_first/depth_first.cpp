@@ -113,10 +113,14 @@ int main(int argc, char* argv[]){
 	printf("[Shortest path search by depth first algorithm]\n\n");
 	if(argc==2&&1==atoi(argv[1])) DEBUG=1;
 
-	int num_edges;
+	int num_edges, num_nodes;
 	int from,to,cost;
+	int start,goal;
 	Node* node;
-	cin>>num_edges;
+
+	cin>>num_nodes>>num_edges;
+	cin>>start>>goal;
+
 	for(int i=0;i<num_edges;i++){
 		cin>>from>>to>>cost;
 		node=get_node(from);
@@ -135,9 +139,6 @@ int main(int argc, char* argv[]){
 		}
 		node->to_node_cost.push_back(pair<int,int>(from,cost));
 	}
-
-	int start,goal;
-	cin>>start>>goal;
 
 	from=start;
 
