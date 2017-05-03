@@ -1,6 +1,11 @@
 ```
-$ ./tools/generate_graph_v2
-./tools/generate_graph_v2 num_nodes num_edges start goal max_cost
+$ ./generate_graph_v2 
+./generate_graph_v2 num_nodes num_edges start goal max_cost
+[num_nodes] [num_edges]
+[start] [goal]
+[from] [to] [cost]
+...
+
 $ ./tools/generate_graph_v2 20 100 0 19 10000 
 20 100
 0 19

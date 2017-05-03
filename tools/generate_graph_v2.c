@@ -41,6 +41,10 @@ int main(int argc, char* argv[]){
 
     if(argc!=6){
         printf("%s num_nodes num_edges start goal max_cost\n",argv[0]);
+        printf("[num_nodes] [num_edges]\n");
+        printf("[start] [goal]\n");
+        printf("[from] [to] [cost]\n");
+        printf("...\n");
         return -1;
     }
 
