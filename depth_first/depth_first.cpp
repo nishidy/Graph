@@ -11,15 +11,13 @@ typedef UI ID;
 typedef UI COST;
 
 class Node{
-
     public:
-
-    ID id;
-    bool depth_visited;
-    unordered_map<ID,COST> to_nodes;
-
-    Node(){}
-    Node(ID id):id(id){}
+        ID id;
+        bool depth_visited;
+        unordered_map<ID,COST> to_nodes;
+    
+        Node(){}
+        Node(ID id):id(id){}
 
 };
 
@@ -29,76 +27,62 @@ class Graph{
     ID max_id;
 
     public:
-
-    Graph(){}
-    Graph(ID s, ID g):start(s), goal(g){}
-
-    void create_node(ID id){
-        if(nodes.find(id)==nodes.end()){
-            nodes[max_id] = new Node(max_id);
-            max_id++;
-        }
-    }
-
-    void add_to_node(ID from, ID to, COST cost){
-        //cout<<from<<to<<cost<<endl;
-        Node* node = nodes[from];
-        node->depth_visited = false;
-        node->to_nodes[to] = cost;
-    }
-
-    void search(){
-        vector<ID> path, best;
-        cout << start << " ---> " << goal << endl;
-        cout << "cost : " << do_search(start,0,1<<31,path,best) << endl;;
-        cout << "path : ";
-        for(auto node : best){
-            cout << node;
-            if(node!=best.back()){
-                cout << " -> ";
+        Graph(){}
+        Graph(ID s, ID g):start(s), goal(g){}
+    
+        void create_node(ID id){
+            if(nodes.find(id)==nodes.end()){
+                nodes[max_id] = new Node(max_id);
+                max_id++;
             }
         }
-        cout << endl;
-    }
-
-    // path is copied variable using as stack
-    // while best is reference pointer
-    COST do_search(ID id, COST cost, COST min, vector<ID> path, vector<ID>& best){
-        path.push_back(id);
-
-        if(id==goal){
-            min = min<cost?min:cost;
-            if(min==cost){
-                best.clear();
-                copy(path.begin(),path.end(),back_inserter(best));
-            }
-
-            /* debug
-            for(auto node: path){
+    
+        void add_to_node(ID from, ID to, COST cost){
+            Node* node = nodes[from];
+            node->depth_visited = false;
+            node->to_nodes[to] = cost;
+        }
+    
+        void search(){
+            vector<ID> path, best;
+            cout << start << " ---> " << goal << endl;
+            cout << "cost : " << do_search(start,0,1<<31,path,best) << endl;;
+            cout << "path : ";
+            for(auto node : best){
                 cout << node;
-                if(node!=path.back()){
+                if(node!=best.back()){
                     cout << " -> ";
                 }
             }
-            cout << " : " << min << endl;
-            */
-
+            cout << endl;
+        }
+    
+        // path is copied variable to use as stack
+        // while best is reference pointer
+        COST do_search(ID id, COST cost, COST min, vector<ID> path, vector<ID>& best){
+            path.push_back(id);
+    
+            if(id==goal){
+                min = min<cost?min:cost;
+                if(min==cost){
+                    best.clear();
+                    copy(path.begin(),path.end(),back_inserter(best));
+                }
+                return min;
+            }
+    
+            nodes[id]->depth_visited = true;
+            for(auto next: nodes[id]->to_nodes){
+                ID   next_id   = next.first;
+                COST next_cost = cost+next.second;
+                if(nodes[next_id]->depth_visited){
+                    continue;
+                }
+                min = do_search(next_id,next_cost,min,path,best);
+            }
+            nodes[id]->depth_visited = false;
             return min;
         }
-
-        nodes[id]->depth_visited = true;
-        for(auto next: nodes[id]->to_nodes){
-            ID   next_id   = next.first;
-            COST next_cost = cost+next.second;
-            //cout<<id<<"->"<<next_id<<":"<<next_cost<<endl;
-            if(nodes[next_id]->depth_visited){
-                continue;
-            }
-            min = do_search(next_id,next_cost,min,path,best);
-        }
-        nodes[id]->depth_visited = false;
-        return min;
-    }
 };
 
 
