@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+#define INIT_VAL -1
+
 typedef struct Node {
     int to;
     struct Node* next;
@@ -9,7 +11,7 @@ typedef struct Node {
 void init(Node* memo_array, int num){
     int i;
     for(i=0;i<num;i++){
-        memo_array[i].to = -1;
+        memo_array[i].to = INIT_VAL;
         memo_array[i].next = NULL;
     }
 }
@@ -17,7 +19,7 @@ void init(Node* memo_array, int num){
 int save(Node* memo_array, int from, int to){
     Node* cur = &memo_array[from];
     while(1){
-        if(cur->to == -1){
+        if(cur->to == INIT_VAL){
             cur->to = to;
             return 1;
         }
@@ -26,9 +28,9 @@ int save(Node* memo_array, int from, int to){
         }
         if(cur->next == NULL){
             Node* new = malloc(sizeof(Node));
+            cur->next = new;
             new->to = to;
             new->next = NULL;
-            cur->next = new;
             return 1;
         }else{
             cur = cur->next;
