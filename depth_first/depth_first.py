@@ -31,7 +31,6 @@ class Graph:
         if node_id == self.goal:
             if cost<min_cost:
                 min_cost=cost
-            if cost==min_cost:
                 best[:]=path.copy()
             return min_cost
         #print(path)
